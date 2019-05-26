@@ -63,7 +63,7 @@ namespace MDToy{
     for(auto && i:list_){
       i.transform(r);
     }
-    auto q=r*cm_;
+    auto&& q=r*cm_;
     cm_=q;
     return *this;
   }

@@ -130,7 +130,7 @@ namespace MDToy{
   }
 
   Atom & Atom::transform(const Eigen::Matrix3d & r){
-    auto q=r*xyz_;
+    auto&& q=r*xyz_;
     xyz_=q;
     return *this;
   }
