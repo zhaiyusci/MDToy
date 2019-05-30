@@ -5,27 +5,60 @@
 #include<sstream>
 
 namespace MDToy{
-  Molecule::Molecule(const char *filename){
-    std::ifstream file(filename);
+  Molecule::Molecule(std::istream& ins){
     std::string line;
-    getline(file, line);
+    std::getline(ins, line);
     std::stringstream ss(line);
     int n;
     double x,y,z;
     ss>> n;
-    getline(file, line);
+    std::getline(ins, line);
     for(int i =0; i!=n; ++i){
-      getline(file,line);
+      std::getline(ins,line);
       std::string elem;
       std::stringstream(line) >> elem >> x >> y >> z;
-      list_.push_back(Atom(elem.c_str(), x, y, z));
+      list_.push_back(Atom(elem, x, y, z));
     }
-    file.close();
     m_=0.0;
     for(auto && i: list_){
       m_+=i.mass();
     }
     updateCOM();
+    return;
+  }
+
+  void Molecule::updateCoordinates(std::istream& ins){
+    try{
+      if(!ins) throw std::runtime_error("End of file.");
+      std::string line;
+      std::getline(ins, line);
+      if(!ins) throw std::runtime_error("End of file.");
+      std::stringstream ss(line);
+      int n;
+      double x,y,z;
+      ss>> n;
+      std::getline(ins, line);
+      if(n==list_.size()){
+        for(int i =0; i!=n; ++i){
+          std::getline(ins,line);
+          std::string elem;
+          std::stringstream(line) >> elem >> x >> y >> z;
+          if(elem==list_[i].element()){
+            list_[i].xyz(x,y,z);
+          }
+        }
+      }
+    }
+    catch(std::runtime_error err){
+      std::cerr <<"Line " << __LINE__ << ": " << err.what() << std::endl;
+      // std::abort();
+      // std::terminate();
+      throw;
+      // return;
+    }
+
+    updateCOM();
+
     return;
   }
 
@@ -44,7 +77,10 @@ namespace MDToy{
     for(auto && i : list_){
       ss<< i.repr() <<std::endl;
     }
-    return ss.str();
+
+    auto r=ss.str();
+    r.erase(r.end()-1);
+    return r;
   }
 
   Eigen::Vector3d Molecule::centerOfMass() {

@@ -8,7 +8,7 @@
 #include<chrono>
 
 namespace MDToy{
-  Atom::Atom(const char* e, double x, double y, double z){
+  Atom::Atom(const std::string& e, double x, double y, double z){
     elem_=e;
     xyz_ << x, y, z;
     setMass();
@@ -19,7 +19,7 @@ namespace MDToy{
     return;
   }
 
-  std::vector< std::tuple< int, double, double> > Atom::NISTIsotopes(const char* e){
+  std::vector< std::tuple< int, double, double> > Atom::NISTIsotopes(const std::string& e){
     int atomicn;
     int massn;
     double mass;
@@ -77,7 +77,7 @@ namespace MDToy{
     return isotopes;
   }
 
-  std::tuple<int, double, double> Atom::NISTAtom(const char* e){
+  std::tuple<int, double, double> Atom::NISTAtom(const std::string& e){
 
       std::vector< std::tuple<int, double, double> > isotopes(NISTIsotopes(e));
       std::sort(isotopes.begin(), isotopes.end(), 
@@ -85,7 +85,7 @@ namespace MDToy{
         // std::cout << std::get<0>(isotopes[0]) << "   " << std::get<1>(isotopes[0]) << "   " <<std::get<2>(isotopes[0]) << std::endl;
       return isotopes[0];
   }
-  std::tuple<int, double, double> Atom::NISTAtom(const char* e, int mn){
+  std::tuple<int, double, double> Atom::NISTAtom(const std::string& e, int mn){
 
       std::vector< std::tuple<int, double, double> > isotopes(NISTIsotopes(e));
       for(auto i : isotopes){

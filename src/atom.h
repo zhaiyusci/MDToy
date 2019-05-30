@@ -12,10 +12,10 @@ namespace MDToy{
       int atomicNumber_; // atomic number, for D it is 1
       int massNumber_; // mass number, for D it is 2
       Eigen::Vector3d xyz_; // position in Cartesian coordinates, in Angstrom
-      static std::vector< std::tuple< int, double, double> > NISTIsotopes(const char*); // return the atomic number, mass number and mass list from NIST database
+      static std::vector< std::tuple< int, double, double> > NISTIsotopes(const std::string&); // return the atomic number, mass number and mass list from NIST database
       void setMass();
     public:
-      Atom(const char *, double, double, double); // initialization with element symbol and Cartesian coodinates
+      Atom(const std::string&, double, double, double); // initialization with element symbol and Cartesian coodinates
       Atom & translate(const Eigen::Vector3d &); // translation
       Atom & transform(const Eigen::Matrix3d &); // maybe rotation presented by an rotation matrix, however we do not check it 
       double mass(); // get its mass
@@ -24,8 +24,8 @@ namespace MDToy{
       std::string element(); // get what kind of element it is
       Eigen::Vector3d & xyz(); // get the Cartesian coordinates
       Eigen::Vector3d & xyz(double, double, double); // set the Cartesian coordinates
-      static std::tuple< int, double, double>  NISTAtom(const char*); // return the atomic number, mass number and mass from NIST database with most composition
-      static std::tuple< int, double, double>  NISTAtom(const char*, int); // return the atomic number, mass number and mass from NIST database 
+      static std::tuple< int, double, double>  NISTAtom(const std::string&); // return the atomic number, mass number and mass from NIST database with most composition
+      static std::tuple< int, double, double>  NISTAtom(const std::string&, int); // return the atomic number, mass number and mass from NIST database 
       std::string repr();
 
   };

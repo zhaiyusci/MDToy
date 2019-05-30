@@ -13,7 +13,8 @@ namespace MDToy{
       void updateCOM(); // update center of mass
     public:
       Eigen::Vector3d centerOfMass() ; // get center of mass
-      Molecule(const char*); // initialize the class from xyz formate file
+      Molecule(std::istream &); // initialize the class from xyz formate file
+      void updateCoordinates(std::istream &); // initialize the class from xyz formate file
       Molecule & setCenterOfMass0(); // get the center of mass to origin
       Molecule & transform(const Eigen::Matrix3d &);
       Molecule & translate(const Eigen::Vector3d &);
