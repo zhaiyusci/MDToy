@@ -1,5 +1,5 @@
-#ifndef _ATOM_H
-#define _ATOM_H
+#ifndef _MDTOY_ATOM_H
+#define _MDTOY_ATOM_H
 #include<string>
 #include<Eigen/Eigen>
 #include<tuple>
@@ -18,16 +18,23 @@ namespace MDToy{
       Atom(const std::string&, double, double, double); // initialization with element symbol and Cartesian coodinates
       Atom & translate(const Eigen::Vector3d &); // translation
       Atom & transform(const Eigen::Matrix3d &); // maybe rotation presented by an rotation matrix, however we do not check it 
-      double mass(); // get its mass
-      int atomicNumber(); // get its atomic number
-      int massNumber(); // get its mass number
-      std::string element(); // get what kind of element it is
-      Eigen::Vector3d & xyz(); // get the Cartesian coordinates
-      Eigen::Vector3d & xyz(double, double, double); // set the Cartesian coordinates
+      double mass() const; // get its mass
+      int atomicNumber() const; // get its atomic number
+      int massNumber() const; // get its mass number
+      std::string element() const; // get what kind of element it is
+      const Eigen::Vector3d & xyz() const; // get the Cartesian coordinates
+      double xyz(int i) const; // get the Cartesian coordinates
+      const Eigen::Vector3d & xyz(double, double, double); // set the Cartesian coordinates
       static std::tuple< int, double, double>  NISTAtom(const std::string&); // return the atomic number, mass number and mass from NIST database with most composition
       static std::tuple< int, double, double>  NISTAtom(const std::string&, int); // return the atomic number, mass number and mass from NIST database 
       std::string repr();
 
   };
+
+  class WeightOfAtom{
+    public:
+      virtual double operator()(const Atom&)const=0;
+      virtual std::string what() const=0;
+  };
 }
-#endif // _ATOM_H
+#endif // _MDTOY_ATOM_H

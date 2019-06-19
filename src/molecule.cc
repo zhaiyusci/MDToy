@@ -18,12 +18,13 @@ namespace MDToy{
       std::string elem;
       std::stringstream(line) >> elem >> x >> y >> z;
       list_.push_back(Atom(elem, x, y, z));
+      weight_.push_back(1.0);
     }
-    m_=0.0;
-    for(auto && i: list_){
-      m_+=i.mass();
-    }
-    updateCOM();
+
+    phi_=&massweighted;
+
+    updateCenter();
+
     return;
   }
 
@@ -57,18 +58,26 @@ namespace MDToy{
       // return;
     }
 
-    updateCOM();
+    updateCenter();
 
     return;
   }
 
-  void Molecule::updateCOM(){
-    // set the mass and c o m
-    cm_=Eigen::Vector3d::Zero();
-    for(auto && i: list_){
-      cm_+=i.mass()*i.xyz();
+  void Molecule::updateCenter(const WeightOfAtom &f, std::vector<double> weight){
+    phi_=&f;
+    weight_=weight;
+    double w;
+    center_=Eigen::Vector3d::Zero();
+    int ii=0;
+    for(auto && i : list_){
+      w+=f(i)*weight[ii];
+      center_+=i.xyz()*f(i)*weight[ii];
     }
-    cm_/=m_;
+    center_/=w;
+  }
+
+  void Molecule::updateCenter(){
+    updateCenter(*phi_, weight_ );
   }
 
   std::string Molecule::repr(){
@@ -83,15 +92,11 @@ namespace MDToy{
     return r;
   }
 
-  Eigen::Vector3d Molecule::centerOfMass() {
-    return cm_;
-  }
-
   Molecule & Molecule::translate (const Eigen::Vector3d & r){
     for( auto && i : list_){
       i.translate(r);
     }
-    cm_+=r;
+    center_+=r;
     return *this;
   }
 
@@ -99,14 +104,50 @@ namespace MDToy{
     for(auto && i:list_){
       i.transform(r);
     }
-    auto&& q=r*cm_;
-    cm_=q;
+    auto&& q=r*center_;
+    center_=q;
     return *this;
   }
 
-  Molecule & Molecule::setCenterOfMass0(){
-    translate(cm_);
+  Molecule & Molecule::setCenter0(){
+    translate(-center_);
+    center_=Eigen::Vector3d::Zero();
     return *this;
+  }
+
+  Eigen::MatrixXd Molecule::xyz()const{
+    Eigen::MatrixXd a(3,list_.size());
+
+    int c=0; // column number
+    for(auto && i: list_){
+      a.col(c)=i.xyz();
+      c++;
+    }
+    return a;
+  }
+
+  const std::vector< Atom >& Molecule::atoms() const{
+    return list_;
+  }
+
+  const Atom & Molecule::atoms(int i) const{
+    return list_[i];
+  }
+
+  const std::vector<double>& Molecule::weight() const{
+    return weight_;
+  }
+
+  double Molecule::weight(int i) const{
+    return weight_[i];
+  }
+
+  const WeightOfAtom &Molecule::phi() const{
+    return *phi_;
+  }
+
+  const Eigen::Vector3d & Molecule::center(){
+    return center_;
   }
 
 }

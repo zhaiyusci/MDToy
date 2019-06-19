@@ -1,5 +1,5 @@
-#ifndef _MOLECULE_H
-#define _MOLECULE_H
+#ifndef _MDTOY_MOLECULE_H
+#define _MDTOY_MOLECULE_H
 #include"atom.h"
 #include<Eigen/Eigen>
 
@@ -8,19 +8,39 @@ namespace MDToy{
     private:
       std::vector< Atom > list_; // atom list
       Eigen::MatrixXd mode_; // normal or local mode
-      Eigen::Vector3d cm_; // center of mass
-      double m_; // total mass
-      void updateCOM(); // update center of mass
+      Eigen::Vector3d center_; // center by some weight ...
+      // double m_; // total mass
+      const WeightOfAtom (*phi_) ;
+      std::vector<double> weight_;
     public:
-      Eigen::Vector3d centerOfMass() ; // get center of mass
+      const Eigen::Vector3d & center() ; // get center of mass
       Molecule(std::istream &); // initialize the class from xyz formate file
       void updateCoordinates(std::istream &); // initialize the class from xyz formate file
-      Molecule & setCenterOfMass0(); // get the center of mass to origin
+      Molecule & setCenter0(); 
+      void updateCenter(const WeightOfAtom &, std::vector<double>);
+      void updateCenter();
       Molecule & transform(const Eigen::Matrix3d &);
       Molecule & translate(const Eigen::Vector3d &);
       void vibrateAlongMode(double );
       std::string repr();
+      Eigen::MatrixXd xyz()const; // return a 3*N-sized matrix for some molecule-based calculation
+      const std::vector< Atom >& atoms() const;
+      const Atom & atoms(int i) const;
+      const std::vector<double> &weight() const ;
+      double weight(int)const;
+      const WeightOfAtom& phi() const;
 
   };
+
+  class MassWeighted: public WeightOfAtom{
+    public:
+      double operator() (const Atom& a) const{
+        return a.mass();
+      }
+      std::string what() const{
+        return "MassWeighted";
+      }
+  };
+  const MassWeighted massweighted;
 }
-#endif // _MOLECULE_H
+#endif // _MDTOY_MOLECULE_H

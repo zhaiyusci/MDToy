@@ -15,7 +15,11 @@ namespace MDToy{
   }
 
   void Atom::setMass(){
-    auto [atomicNumber_, massNumber_, mass_]=NISTAtom(elem_.c_str());
+    auto [atomicNumber, massNumber, mass]=NISTAtom(elem_);
+    atomicNumber_=atomicNumber;
+    massNumber_=massNumber;
+    mass_=mass;
+    // std::cout <<"  "<< atomicNumber_<<"  "<< massNumber_<<"  "<< mass_ <<"  "<<std::endl;
     return;
   }
 
@@ -95,28 +99,32 @@ namespace MDToy{
       return isotopes[0];
   }
 
-  double Atom::mass() {
+  double Atom::mass() const{
     return mass_;
   }
 
-  int Atom::massNumber(){
+  int Atom::massNumber()const{
     return massNumber_;
   }
 
-  int Atom::atomicNumber(){
+  int Atom::atomicNumber()const{
     return atomicNumber_;
   }
 
-  Eigen::Vector3d & Atom::xyz(){
+  const Eigen::Vector3d & Atom::xyz() const{
     return xyz_;
   }
 
-  Eigen::Vector3d & Atom::xyz(double x, double y, double z){
+  double Atom::xyz(int i) const{
+    return xyz_(i);
+  }
+
+  const Eigen::Vector3d & Atom::xyz(double x, double y, double z){
     xyz_<< x, y, z;
     return xyz_;
   }
 
-  std::string Atom::element(){
+  std::string Atom::element()const{
     return elem_;
   }
 
