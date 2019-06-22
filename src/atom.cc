@@ -19,7 +19,6 @@ namespace MDToy{
     atomicNumber_=atomicNumber;
     massNumber_=massNumber;
     mass_=mass;
-    // std::cout <<"  "<< atomicNumber_<<"  "<< massNumber_<<"  "<< mass_ <<"  "<<std::endl;
     return;
   }
 
@@ -28,7 +27,6 @@ namespace MDToy{
     int massn;
     double mass;
     static std::string nistdata;
-    // std::cout << nistdata.size() << std::endl;
     std::string re=e;
     re="_[^_]*? "+re+" [^_]*?_";
 
@@ -45,16 +43,13 @@ namespace MDToy{
     boost::regex element(re.c_str(), boost::regex_constants::ECMAScript);
     boost::smatch ss;
     if(boost::regex_search(nistdata, ss, element) ){
-      // std::cout<< "Found: " << ss.size() << " " << ss.str(0) << std::endl;
       std::stringstream elemtext(ss.str(0));
       std::string line;
       while(getline(elemtext, line)){
-        // std::cout << line << std::endl;
           boost::smatch iso;
         if(boost::regex_match(line, iso, 
               boost::regex(".{8}([[:digit:]][[:digit:][:space:]]{2})  ([[:digit:].]+)[^[:space:]]* {1,10}([[:digit:].]+)[^[:space:]]*.*", 
                 boost::regex_constants::ECMAScript))){
-          // std::cout << iso[0] << "   " << iso[1] << "   " << iso[2] << "   " << iso[3] << std::endl;
           int mn;
           std::stringstream(iso[1])>> mn;
           double m;
@@ -65,7 +60,6 @@ namespace MDToy{
         }else if(boost::regex_match(line, iso,
               boost::regex(".{8}([[:digit:]][[:digit:][:space:]]{2})  ([[:digit:].]+)[^[:space:]]*.*", 
                 boost::regex_constants::ECMAScript))){
-          // std::cout << iso[0] << "   " << iso[1] << "   " << iso[2]  << std::endl;
           int mn;
           std::stringstream(iso[1])>> mn;
           double m;
@@ -86,7 +80,6 @@ namespace MDToy{
       std::vector< std::tuple<int, double, double> > isotopes(NISTIsotopes(e));
       std::sort(isotopes.begin(), isotopes.end(), 
           [](std::tuple<int, double, double> a , std::tuple<int, double, double> b) -> bool{ return std::get<2>(a) > std::get<2>(b);});
-        // std::cout << std::get<0>(isotopes[0]) << "   " << std::get<1>(isotopes[0]) << "   " <<std::get<2>(isotopes[0]) << std::endl;
       return isotopes[0];
   }
   std::tuple<int, double, double> Atom::NISTAtom(const std::string& e, int mn){

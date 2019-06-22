@@ -2,7 +2,7 @@
 #include<iostream>
 
 namespace MDToy{
-  Eigen::Matrix3d kabsch(Molecule PP, Molecule QQ){
+  Eigen::Matrix3d kabsch(const Molecule &PP, const Molecule &QQ){
     int N;
     if(PP.atoms().size()==QQ.atoms().size() ) {
       N=PP.atoms().size();
@@ -24,18 +24,11 @@ namespace MDToy{
             throw std::runtime_error("Kabsch algorithm: types of atoms mismatch.");
           }
           H(i,j)+=P.atoms(k).xyz(i)*Q.atoms(k).xyz(j)*pow(P.phi()(P.atoms(k))*P.weight(k),2);
-          std::cout << (P.atoms(k)).mass() <<std::endl;
-          std::cout << (P.atoms(k)).massNumber() <<std::endl;
         }
       }
     }
 
-    std::cout << "H" << std::endl;
-    std::cout << H << std::endl;
-
     Eigen::JacobiSVD<Eigen::Matrix3d> svd(H , Eigen::ComputeFullU | Eigen::ComputeFullV);
-    // svd.computeU();
-    // svd.computeV();
 
     // Find the rotation
     double d = (svd.matrixV() * svd.matrixU().transpose()).determinant();

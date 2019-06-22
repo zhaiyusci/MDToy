@@ -33,7 +33,7 @@ int main(){
 
   std::ofstream output2;
   output2.open("out2.xyz");
-  for(int i=0; i!=42; ++i){
+  for(int i=0; i!=22; ++i){
     ch4.updateCoordinates(file);
     ch4.setCenter0();
     Eigen::Matrix3d m;
@@ -42,8 +42,6 @@ int main(){
       *Eigen::AngleAxisd(1.0, Eigen::Vector3d::UnitZ());
     ch4.transform(m);
     output2<< ch4.repr() << std::endl;
-    // std::cout << ch4.repr()<<std::endl;
-    // std::cout << ch4.centerOfMass() <<std::endl;
 
     Eigen::Matrix3d U= MDToy::kabsch(ch4, ch4ref);
     std::cout << U << std::endl;
@@ -52,7 +50,6 @@ int main(){
   file.close();
   output.close();
   output2.close();
-
 
 
 

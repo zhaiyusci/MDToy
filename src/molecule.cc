@@ -52,10 +52,7 @@ namespace MDToy{
     }
     catch(std::runtime_error err){
       std::cerr <<"Line " << __LINE__ << ": " << err.what() << std::endl;
-      // std::abort();
-      // std::terminate();
       throw;
-      // return;
     }
 
     updateCenter();
@@ -111,7 +108,7 @@ namespace MDToy{
 
   Molecule & Molecule::setCenter0(){
     translate(-center_);
-    center_=Eigen::Vector3d::Zero();
+    // center_=Eigen::Vector3d::Zero();
     return *this;
   }
 
