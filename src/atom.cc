@@ -23,9 +23,6 @@ namespace MDToy{
   }
 
   std::vector< std::tuple< int, double, double> > Atom::NISTIsotopes(const std::string& e){
-    int atomicn;
-    int massn;
-    double mass;
     static std::string nistdata;
     std::string re=e;
     re="_[^_]*? "+re+" [^_]*?_";

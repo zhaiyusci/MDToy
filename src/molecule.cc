@@ -9,11 +9,11 @@ namespace MDToy{
     std::string line;
     std::getline(ins, line);
     std::stringstream ss(line);
-    int n;
+    unsigned int n;
     double x,y,z;
     ss>> n;
     std::getline(ins, line);
-    for(int i =0; i!=n; ++i){
+    for(unsigned int i =0; i!=n; ++i){
       std::getline(ins,line);
       std::string elem;
       std::stringstream(line) >> elem >> x >> y >> z;
@@ -35,12 +35,12 @@ namespace MDToy{
       std::getline(ins, line);
       if(!ins) throw std::runtime_error("End of file.");
       std::stringstream ss(line);
-      int n;
+      unsigned int n;
       double x,y,z;
       ss>> n;
       std::getline(ins, line);
       if(n==list_.size()){
-        for(int i =0; i!=n; ++i){
+        for(unsigned int i =0; i!=n; ++i){
           std::getline(ins,line);
           std::string elem;
           std::stringstream(line) >> elem >> x >> y >> z;
@@ -60,21 +60,23 @@ namespace MDToy{
     return;
   }
 
-  void Molecule::updateCenter(const WeightOfAtom &f, std::vector<double> weight){
+  Molecule& Molecule::updateCenter(const WeightOfAtom &f, std::vector<double> weight){
     phi_=&f;
     weight_=weight;
-    double w;
+    updateCenter();
+    return *this;
+  }
+
+  Molecule& Molecule::updateCenter(){
+    double w=0.0;
     center_=Eigen::Vector3d::Zero();
     int ii=0;
     for(auto && i : list_){
-      w+=f(i)*weight[ii];
-      center_+=i.xyz()*f(i)*weight[ii];
+      w+=(*phi_)(i)*weight_[ii];
+      center_+=i.xyz()*(*phi_)(i)*weight_[ii++];
     }
     center_/=w;
-  }
-
-  void Molecule::updateCenter(){
-    updateCenter(*phi_, weight_ );
+    return *this;
   }
 
   std::string Molecule::repr(){

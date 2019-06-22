@@ -17,8 +17,8 @@ namespace MDToy{
       Molecule(std::istream &); // initialize the class from xyz formate file
       void updateCoordinates(std::istream &); // initialize the class from xyz formate file
       Molecule & setCenter0(); 
-      void updateCenter(const WeightOfAtom &, std::vector<double>); // calc the center using the above weights
-      void updateCenter(); // calc using the old weight
+      Molecule & updateCenter(const WeightOfAtom &, std::vector<double>); // calc the center using the above weights
+      Molecule & updateCenter(); // calc using the old weight
       Molecule & transform(const Eigen::Matrix3d &);
       Molecule & translate(const Eigen::Vector3d &);
       void vibrateAlongMode(double );
