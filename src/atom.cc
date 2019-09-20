@@ -76,7 +76,8 @@ namespace MDToy{
 
       std::vector< std::tuple<int, double, double> > isotopes(NISTIsotopes(e));
       std::sort(isotopes.begin(), isotopes.end(), 
-          [](std::tuple<int, double, double> a , std::tuple<int, double, double> b) -> bool{ return std::get<2>(a) > std::get<2>(b);});
+          [](std::tuple<int, double, double> a , std::tuple<int, double, double> b) -> bool
+          { return std::get<2>(a) > std::get<2>(b);});
       return isotopes[0];
   }
   std::tuple<int, double, double> Atom::NISTAtom(const std::string& e, int mn){
